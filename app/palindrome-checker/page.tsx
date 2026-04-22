@@ -28,7 +28,8 @@ const PalindromeChecker = () => {
   };
 
   return (
-    <main className="h-screen flex flex-col bg-sky-100">
+    // text-black below, to temp. fix the issue (remove later)
+    <main className="text-black h-screen flex flex-col bg-sky-100">
       {/* Turn it into a reusable component? */}
       <h1 className="p-2 font-mono text-4xl text-center">
         🌮 Palindrome Checker 🐈
