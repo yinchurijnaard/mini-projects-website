@@ -25,26 +25,6 @@ const PalindromeChecker = () => {
     } else {
       setResult(<p>{result} is not a palindrome! 🙁</p>);
     }
-
-    // Old code
-    // Save the user input to a lowercase string using .toLowerCase()
-    // const userInput = inputValue.toLowerCase();
-
-    // Split the user input using .split()
-    // const userInputSplit = userInput.split("");
-
-    // Reverse the user input using .reverse()
-    // const userInputReverse = userInputSplit.reverse();
-
-    // Set the reversed user input back to a normal string using .join()
-    // const userInputReversedString = userInputReverse.join("");
-
-    // Check if inputValue equals its reverse
-    // if (result === inputValue) {
-    //   alert(`${result} is a palindrome :)`);
-    // } else {
-    //   alert(`${result} is not a palindrome :(`);
-    // }
   };
 
   return (
