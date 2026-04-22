@@ -1,33 +1,48 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-@layer base {
-  html {
-    @apply bg-neutral-300;
+@theme {
+  --color-main-bg: #111111;
+  --color-main-text: #fafafa;
+  --color-sec-text: #d5d5d5;
+  --color-third-text: #2a2a2a;
+  --color-main-border: #2a2a2a;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-pixel-square: var(--font-geist-pixel-square);
+  --font-pixel-grid: var(--font-geist-pixel-grid);
+  --font-pixel-circle: var(--font-geist-pixel-circle);
+  --font-pixel-triangle: var(--font-geist-pixel-triangle);
+  --font-pixel-line: var(--font-geist-pixel-line);
+}
+
+@variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-main-bg: #eeeeee;
+    --color-main-text: #050505;
+    --color-sec-text: #2a2a2a;
+    --color-third-text: #d5d5d5;
+    --color-main-border: #d5d5d5;
   }
 }
 
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
-} */
+@light {
+  --color-main-bg: #eeeeee;
+  --color-main-text: #050505;
+  --color-sec-text: #2a2a2a;
+  --color-third-text: #d5d5d5;
+  --color-main-border: #d5d5d5;
+}
 
-/* @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-} */
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html,
+  body {
+    height: 100%;
   }
-} */
-
-/* body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-} */
+  body {
+    @apply bg-main-bg text-main-text border-main-border font-sans;
+  }
+}

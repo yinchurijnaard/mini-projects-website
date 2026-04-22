@@ -1,8 +1,11 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
+import TitleCard from "../components/TitleCard";
 
 // To Do / Check
+// - Fix overflow issue with the results box
+// - Turn title card into a reusable component?
 // - Save to localStorage?
 // localStorage.setItem("savedInput", inputValue);
 
@@ -13,72 +16,85 @@ const PalindromeChecker = () => {
 
   // Capture user input value and only allow characters (a-zA-Z)
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value.replace(/[^a-zA-Z0-9]/g, ""));
+    setInputValue(e.target.value.replace(/[^a-zA-Z0-9 ]/g, ""));
   };
 
   // Check if user input value is a palindrome
   const handleSave = () => {
-    const result = inputValue.toLowerCase().split("").reverse().join("");
+    const cleanInput = inputValue.toLowerCase().replace(/\s/g, "");
 
-    if (inputValue === result) {
-      setResult(<p>{result} is a palindrome! 😃</p>);
+    const reversedClean = cleanInput.split("").reverse().join("");
+
+    if (cleanInput === reversedClean) {
+      setResult(
+        <div>
+          <span className="font-bold">&quot;{inputValue}&quot;</span> is a
+          palindrome! 😃
+        </div>,
+      );
     } else {
-      setResult(<p>{result} is not a palindrome! 🙁</p>);
+      const reversedOriginal = inputValue.split("").reverse().join("");
+
+      setResult(
+        <div className="flex flex-col gap-2">
+          <p>
+            <span className="font-bold">&quot;{inputValue}&quot;</span> is not a
+            palindrome! 🙁
+          </p>
+          <p>
+            &#40;Reversed:&nbsp;
+            <span className="font-bold">&quot;{reversedOriginal}&quot;</span>
+            &#41;
+          </p>
+        </div>,
+      );
     }
   };
 
   return (
     // text-black below, to temp. fix the issue (remove later)
-    <main className="text-black h-screen flex flex-col bg-sky-100">
-      {/* Turn it into a reusable component? */}
-      <h1 className="p-2 font-mono text-4xl text-center">
-        🌮 Palindrome Checker 🐈
-      </h1>
+    <main className="h-screen min-h-full flex flex-col gap-12">
+      {/* Title */}
+      <TitleCard title={"🌮 Palindrome Checker 🐈"} />
 
-      {/* Palindrome Checker */}
-      <div className="h-screen w-full flex flex-col gap-8 items-center p-4">
-        {/* Definition card */}
-        <div className="bg-neutral-200 rounded p-4 flex flex-col gap-2">
-          <p className="font-serif font-bold text-2xl">palindrome</p>
-          <p className="text-neutral-500">noun</p>
-          <p>pal•in•drome</p>
-          <p>
-            a word, verse, or sentence &#40;such as &quot;Able was I ere I saw
-            Elba&quot;&#41; or a number &#40;such as 1881&#41; that reads the
-            same backward or forward
-          </p>
+      {/* Dictionary card */}
+      <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded bg-main-border">
+        <div className="flex items-end gap-4 font-serif">
+          <p className="font-bold text-2xl">palindrome</p>
+          <p className="text-sec-text text-xl ">noun</p>
         </div>
+        <p className="font-light">pal·​in·​drome</p>
+        <p>
+          a word, verse, or sentence &#40;such as &quot;Able was I ere I saw
+          Elba&quot;&#41; or a number &#40;such as 1881&#41; that reads the same
+          backward or forward
+        </p>
+      </div>
 
-        {/* Change this input field to a daisyUI input field */}
-        <div className="flex flex-col gap-2 items-center">
-          <p>Check your word or phrase:</p>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleChange}
-            placeholder="Begin typing..."
-            className="border-2 border-neutral-500 p-2 rounded"
-          />
-        </div>
-
-        {/* Change this button to a daisyUI button */}
+      {/* Checking */}
+      <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded border-2 border-main-border">
+        <p className="font-bold">Check your word or phrase:</p>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleChange}
+          placeholder="Begin typing..."
+          className="input"
+        />
         <button
           type="submit"
           onClick={handleSave}
           disabled={inputValue.length <= 2}
-          className="bg-green-400 w-fit py-2 px-4 rounded text-white font-bold"
+          className="btn btn-outline text-green-500 w-fit"
         >
           Check
         </button>
+      </div>
 
-        {/* Divider */}
-        <hr className="text-neutral-500 w-1/2" />
-
-        {/* Output */}
-        <div className="border-2 border-neutral-500 p-4 rounded w-1/2 h-1/6">
-          <p className="font-bold">Result:</p>
-          <p>{result}</p>
-        </div>
+      {/* Results */}
+      <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded border-2 border-main-border">
+        <p className="font-bold">Result:</p>
+        <div className="wrap-break-word whitespace-normal">{result}</div>
       </div>
     </main>
   );
