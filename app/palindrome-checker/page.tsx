@@ -11,16 +11,13 @@ import TitleCard from "../components/TitleCard";
 // - Add button to clear history
 
 const PalindromeChecker = () => {
-  // Set state
   const [inputValue, setInputValue] = useState("");
   const [result, setResult] = useState<React.ReactNode>(null);
 
-  // Capture user input value and only allow characters (a-zA-Z)
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value.replace(/[^a-zA-Z0-9 ]/g, ""));
   };
 
-  // Check if user input value is a palindrome
   const handleSave = () => {
     const cleanInput = inputValue.toLowerCase().replace(/\s/g, "");
 
