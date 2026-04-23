@@ -6,14 +6,13 @@ import Link from "next/link";
 // - Create project cards instead of displaying links
 
 // Other mini project ideas
-// - Color generator
 // - Meme generator using the Giphy API
 // - Weather app using the OpenWeather API
 
 export default function Home() {
   return (
     <main className="flex flex-col gap-4 items-center justify-center">
-      <h1 className="text-2xl sm:text-4xl">
+      <h1 className="text-2xl sm:text-4xl text-center">
         Mini Projects - by Yin Chu Rijnaard
       </h1>
       <h2 className="text-xl sm:text-3xl">Projects:</h2>
@@ -23,6 +22,9 @@ export default function Home() {
         </Link>
         <Link href="/password-generator" className="underline">
           Password Generator
+        </Link>
+        <Link href="/color-generator" className="underline">
+          Colour Generator
         </Link>
       </div>
     </main>
