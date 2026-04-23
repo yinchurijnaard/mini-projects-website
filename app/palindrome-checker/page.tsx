@@ -5,9 +5,10 @@ import TitleCard from "../components/TitleCard";
 
 // To Do / Check
 // - Fix overflow issue with the results box
-// - Turn title card into a reusable component?
+// - Fix issue as pointed out by Javier
+// - Fix issue where footer is not visible on iPhone in landscape mode
 // - Save to localStorage?
-// localStorage.setItem("savedInput", inputValue);
+// - Add button to clear history
 
 const PalindromeChecker = () => {
   // Set state
@@ -52,12 +53,9 @@ const PalindromeChecker = () => {
   };
 
   return (
-    // text-black below, to temp. fix the issue (remove later)
     <main className="h-screen min-h-full flex flex-col gap-12">
-      {/* Title */}
       <TitleCard title={"🌮 Palindrome Checker 🐈"} />
 
-      {/* Dictionary card */}
       <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded bg-main-border">
         <div className="flex items-end gap-4 font-serif">
           <p className="font-bold text-2xl">palindrome</p>
@@ -71,7 +69,6 @@ const PalindromeChecker = () => {
         </p>
       </div>
 
-      {/* Checking */}
       <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded border-2 border-main-border">
         <p className="font-bold">Check your word or phrase:</p>
         <input
@@ -91,7 +88,6 @@ const PalindromeChecker = () => {
         </button>
       </div>
 
-      {/* Results */}
       <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded border-2 border-main-border">
         <p className="font-bold">Result:</p>
         <div className="wrap-break-word whitespace-normal">{result}</div>

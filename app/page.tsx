@@ -4,8 +4,6 @@ import Link from "next/link";
 // - Create a navbar
 // - Render the links instead of hardcoding them
 // - Create project cards instead of displaying links
-// Use localStorage to display history
-// Add button to clear localStorage
 
 // Other mini project ideas
 // - Color generator
