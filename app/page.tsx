@@ -1,9 +1,9 @@
 import Link from "next/link";
 
+import { links } from "./constants/navigation";
+
 // To Do / Check
-// - Create a navbar
-// - Render the links instead of hardcoding them
-// - Create project cards instead of displaying links
+// - Create project cards instead of displaying links (use daisyUI for mockups, create a short screen recording of the app, turn into a GIF)
 
 // Other mini project ideas
 // - Meme generator using the Giphy API
@@ -17,15 +17,13 @@ export default function Home() {
       </h1>
       <h2 className="text-xl sm:text-3xl">Projects:</h2>
       <div className="flex flex-col">
-        <Link href="/palindrome-checker" className="underline">
-          Palindrome Checker
-        </Link>
-        <Link href="/password-generator" className="underline">
-          Password Generator
-        </Link>
-        <Link href="/color-generator" className="underline">
-          Colour Generator
-        </Link>
+        {links.map((link) => {
+          return (
+            <Link key={link.href} href={link.href} className="underline">
+              {link.name}
+            </Link>
+          );
+        })}
       </div>
     </main>
   );
