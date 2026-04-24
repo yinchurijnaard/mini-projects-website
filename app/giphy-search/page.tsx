@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import Masonry from "react-masonry-css";
+import { GiphyFetch } from "@giphy/js-fetch-api";
 import TitleCard from "../components/TitleCard";
 
 // To Do / Check
@@ -12,6 +11,45 @@ import TitleCard from "../components/TitleCard";
 // - Modal for when a user clicks/taps on a GIF
 // - Modal: copy link feature
 // - Search by predetermined searches (such as funny, animals, cute)
+
+const GiphySearch = () => {
+  const apiKey = process.env.NEXT_PUBLIC_GIPHY_SEARCH_API_KEY;
+
+  const getGif = async () => {
+    const url = `https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=10`;
+
+    try {
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error(`Response status: ${res.status}`);
+      }
+
+      const result = await res.json();
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getGif();
+
+  return (
+    <main className="h-screen min-h-full flex flex-col gap-12">
+      <TitleCard title={"👾 GIPHY Search 🔎"} />
+
+      <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded bg-main-border">
+        <input type="text" placeholder="Search..." className="input p-2" />
+        <div className="skeleton w-full h-full flex flex-col items-center justify-center">
+          <p>Default GIF comes here</p>
+        </div>
+      </div>
+    </main>
+  );
+};
+
+export default GiphySearch;
 
 // Logic / Flow
 // INITIAL LOAD
@@ -39,19 +77,6 @@ import TitleCard from "../components/TitleCard";
 // - Add a button to copy the GIF link
 // - Add sharing feature on modal???
 
-const GiphySearch = () => {
-  return (
-    <main className="h-screen min-h-full flex flex-col gap-12">
-      <TitleCard title={"👾 GIPHY Search 🔎"} />
-
-      <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded bg-main-border">
-        <input type="text" placeholder="Search..." className="input p-2" />
-        <div className="skeleton w-full h-full flex flex-col items-center justify-center">
-          <p>Default GIF comes here</p>
-        </div>
-      </div>
-    </main>
-  );
-};
-
-export default GiphySearch;
+// BASICS OF API REQUESTS
+// The browsers fetch API returns a Promise
+// API calls are async and return a Promise that resolves to an array of User types
