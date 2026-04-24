@@ -6,7 +6,6 @@ import { links } from "./constants/navigation";
 // - Create project cards instead of displaying links (use daisyUI for mockups, create a short screen recording of the app, turn into a GIF)
 
 // Other mini project ideas
-// - Meme generator using the Giphy API
 // - Weather app using the OpenWeather API
 
 export default function Home() {
