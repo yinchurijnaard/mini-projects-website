@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Confetti from "react-confetti";
 import TitleCard from "../components/TitleCard";
 
 const DoNotClickMe = () => {
@@ -9,6 +10,7 @@ const DoNotClickMe = () => {
   const [buttonText, setButtonText] = useState<string>("don't click me");
   const [buttonHeight, setButtonHeight] = useState("100px");
   const [buttonWidth, setButtonWidth] = useState("100px");
+  const [hasWon, setHasWon] = useState(false);
 
   // const [toasts, setToasts] = useState([]);
 
@@ -58,6 +60,7 @@ const DoNotClickMe = () => {
       setButtonText("you're hurting me :(");
     } else if (timesClicked > 36) {
       setButtonText("Okay, you won... 😐");
+      setHasWon(true);
     }
   };
 
@@ -78,6 +81,7 @@ const DoNotClickMe = () => {
       {/* CONTENT */}
       <div className="flex flex-row items-center justify-center">
         <>{message()}</>
+        {hasWon && <Confetti />}
         <button
           onClick={moveButton}
           style={{
