@@ -3,4 +3,5 @@ export const links = [
   { name: "Password Generator", href: "/password-generator" },
   { name: "Colour Generator", href: "/color-generator" },
   { name: "GIPHY Search", href: "/giphy-search" },
+  { name: "Don't Click Me", href: "/do-not-click-me" },
 ];
