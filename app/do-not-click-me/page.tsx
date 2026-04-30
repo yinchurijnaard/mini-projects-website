@@ -19,22 +19,6 @@ const DoNotClickMe = () => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
-  // const message = () => {
-  //   if (timesClicked === 0) {
-  //     return (
-  //       <p>
-  //         Click the button... <span className="text-xs">or not</span>
-  //       </p>
-  //     );
-  //   } else {
-  //     return (
-  //       <p>
-  //         <span className="font-bold">Button says:</span> {buttonText}
-  //       </p>
-  //     );
-  //   }
-  // };
-
   const resetGame = () => {
     setPosition({ top: 50, left: 50 });
     setTimesClicked(0);
@@ -65,10 +49,6 @@ const DoNotClickMe = () => {
       setButtonText("Okay, you won... 😐");
       setHasWon(true);
       setButtonDisabled(true);
-
-      // setTimeout(() => {
-      //   resetGame();
-      // }, 5000);
     } else if (newCount >= 30) {
       setButtonText("You're hurting me :(");
     } else if (newCount >= 25) {
@@ -82,24 +62,6 @@ const DoNotClickMe = () => {
     } else if (newCount >= 5) {
       setButtonText("Don't click me, please");
     }
-
-    // OLD IF STATEMENT
-    // if (timesClicked >= 35) {
-    //   setButtonText("Okay, you won... 😐");
-    //   setHasWon(true);
-    // } else if (timesClicked >= 30) {
-    //   setButtonText("You're hurting me :(");
-    // } else if (timesClicked >= 25) {
-    //   setButtonText("Please don't click me pwetty pwease 🥺");
-    // } else if (timesClicked >= 20) {
-    //   setButtonText("DO NOT CLICK ME!!!");
-    // } else if (timesClicked >= 15) {
-    //   setButtonText("I said: do NOT click me");
-    // } else if (timesClicked >= 10) {
-    //   setButtonText("Seriously, don't click me");
-    // } else if (timesClicked >= 5) {
-    //   setButtonText("Don't click me, please");
-    // }
   };
 
   useEffect(() => {
