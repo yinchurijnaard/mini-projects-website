@@ -1,0 +1,45 @@
+{
+  "response_code": 0,
+  "results": [
+    {
+      "type": "multiple",
+      "difficulty": "medium",
+      "category": "General Knowledge",
+      "question": "The new One World Trade Center in Manhattan, New York City was designed by which architect? ",
+      "correct_answer": "David Childs",
+      "incorrect_answers": ["Bjarke Ingels", "Michael Arad", "Fumihiko Maki"]
+    },
+    {
+      "type": "multiple",
+      "difficulty": "hard",
+      "category": "General Knowledge",
+      "question": "De Eemhof, Port Zelande and Het Heijderbos are holiday villas owned by what company?",
+      "correct_answer": "Center Parcs",
+      "incorrect_answers": ["Yelloh Village", "Keycamp", "Villa Plus"]
+    },
+    {
+      "type": "multiple",
+      "difficulty": "medium",
+      "category": "General Knowledge",
+      "question": "The early part of which decade, did the Goth Subculture begin?",
+      "correct_answer": "1980s",
+      "incorrect_answers": ["1990s", "2000s", "1970s"]
+    },
+    {
+      "type": "boolean",
+      "difficulty": "medium",
+      "category": "General Knowledge",
+      "question": "SCP-173 was the first SCP article written for the web-based collaborative fiction project known as the &quot;SCP Foundation&quot;",
+      "correct_answer": "True",
+      "incorrect_answers": ["False"]
+    },
+    {
+      "type": "multiple",
+      "difficulty": "easy",
+      "category": "General Knowledge",
+      "question": "How many colors are there in a rainbow?",
+      "correct_answer": "7",
+      "incorrect_answers": ["8", "9", "10"]
+    }
+  ]
+}

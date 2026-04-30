@@ -4,4 +4,5 @@ export const links = [
   { name: "Colour Generator", href: "/color-generator" },
   { name: "GIPHY Search", href: "/giphy-search" },
   { name: "Don't Click Me", href: "/do-not-click-me" },
+  { name: "Trivia Game", href: "/trivia-game" },
 ];
