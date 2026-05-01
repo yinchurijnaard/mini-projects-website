@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import TitleCard from "../components/TitleCard";
-import triviaGameQuestions from "../data/triviaGameQuestions.json";
+import { results } from "../data/triviaGameQuestions.json";
 
 // To Do / Check
 // - Implement points systems (e.g., +10 points for every correct answer and -5 points for every incorrect answer)
 // - Add react-confetti IF the player has all questions correct!
 // - Implement local storage logic such that the player doesn't lose its progress in case of an accidental page refresh
 // - Add a 1/5 questions answered, 2/5 questions answered, etc
+
+// QUESTIONS
+// If I render decodeHTML(question), how will I know that's a dynamic question that updates as the player goes to the next question?
 
 // THE LOGIC (REFINED WITH THE HELP OF GEMINI)
 // Setup
@@ -45,6 +48,22 @@ import triviaGameQuestions from "../data/triviaGameQuestions.json";
 // - Returns 5 questions in the category 'General Knowledge'. Any difficulty and includes both multiple choice and true/false questions.
 // - See triviaGameQuestions.json for a temporary hardcoded API response
 
+// INTERFACES
+interface TriviaGameTypes {
+  id: number;
+  type: string;
+  question: string;
+  correctAnswer: string;
+  incorrectAnswers: string[];
+}
+
+// HELPER FUNCTIONS
+// const decodeHTML = (html: string) => {
+//   const text = document.createElement("textarea");
+//   text.innerHTML = html;
+//   return text.value;
+// };
+
 const TriviaGame = () => {
   // useState
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -52,23 +71,22 @@ const TriviaGame = () => {
 
   // useEffect
 
+  // DESTRUCTURING DATA
+  const { type, question, correct_answer, incorrect_answers } =
+    results[currentIndex];
+
   // START GAME
   const startGame = () => {
-    console.log("Game started!");
-    console.log(triviaGameQuestions);
+    const answers = [...incorrect_answers, correct_answer];
+    const shuffled = answers.sort(() => Math.random() - 0.5);
+    // console.log("Game started!");
+    console.log(shuffled);
   };
 
   // RESET GAME
-  const resetGame = () => {
-    console.log("Game reset!");
-  };
-
-  // HELPER FUNCTIONS
-  const decodeHTML = (html: string) => {
-    const text = document.createElement("textarea");
-    text.innerHTML = html;
-    return text.value;
-  };
+  // const resetGame = () => {
+  //   console.log("Game reset!");
+  // };
 
   return (
     <main className="h-screen min-h-full flex flex-col gap-12">
@@ -79,6 +97,15 @@ const TriviaGame = () => {
           Start game
         </button>
       </div>
+
+      {/* THE ACTUAL GAME, FOR NOW */}
+      {/* <div className="bg-sky-300">
+        {results[currentIndex].map((qa: TriviaGameTypes) => (
+          <div key={qa.id}>
+            <p>{qa.question}</p>
+          </div>
+        ))}
+      </div> */}
     </main>
   );
 };
