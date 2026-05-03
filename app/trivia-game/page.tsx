@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import TitleCard from "../components/TitleCard";
-import { results } from "../data/triviaGameQuestions.json";
 
 // To Do / Check
 // - Implement points systems (e.g., +10 points for every correct answer and -5 points for every incorrect answer)
@@ -10,6 +9,7 @@ import { results } from "../data/triviaGameQuestions.json";
 // - Implement local storage logic such that the player doesn't lose its progress in case of an accidental page refresh
 // - Add a 1/5 questions answered, 2/5 questions answered, etc
 // - Fix/update layout, make it look actually nice
+// - Let players choose difficulty, question types and category themselves
 
 // THE LOGIC (REFINED WITH THE HELP OF GEMINI)
 
@@ -34,41 +34,46 @@ import { results } from "../data/triviaGameQuestions.json";
 // - Returns 5 questions in the category 'General Knowledge'. Any difficulty and includes both multiple choice and true/false questions.
 // - See triviaGameQuestions.json for a temporary hardcoded API response
 
-// interface TriviaResponse {
-//   response_code: number;
-//   results: TriviaQuestion[];
-// }
+//
 
-// interface TriviaQuestion {
-//   type: string;
-//   question: string;
-//   correct_answer: string;
-//   incorrect_answers: string[];
-// }
+// HELPER FUNCTIONS
+const decodeHTML = (html: string) => {
+  const text = document.createElement("textarea");
+  text.innerHTML = html;
+  return text.value;
+};
+
+// INTERFACES
+interface TriviaData {
+  question: string;
+  incorrect_answers: string[];
+  correct_answer: string;
+}
 
 const TriviaGame = () => {
-  // useState
-  // const [currentIndex, setCurrentIndex] = useState<number>(1);
-  const [triviaData, setTriviaData] = useState([]);
+  // Initializing state like this prevents the console from complaining that there's nothing to destructure
+  const [triviaData, setTriviaData] = useState<TriviaData[]>([
+    {
+      question: "",
+      incorrect_answers: [],
+      correct_answer: "",
+    },
+  ]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [score, setScore] = useState<number>(0);
 
   // useEffect to fetch the data (???) (instead of the 'normal' Next.js 'pure' fetch?)
   useEffect(() => {
-    const getTriviaData = async () => {
-      // try {
-      //   const res = await fetch(
-      //     "https://opentdb.com/api.php?amount=5&category=9",
-      //   );
-      //   if (!res.ok) throw new Error("Failed to fetch questions");
-      //   const data = await res.json();
-      //   setTriviaData(data);
-      // } catch (error) {
-      //   setError(error.message);
-      // }
+    const controller = new AbortController();
+    const signal = controller.signal;
 
+    const getTriviaData = async () => {
+      // Refactor to use a try / catch block
       const res = await fetch(
         "https://opentdb.com/api.php?amount=5&category=9",
+        { signal },
       );
 
       if (!res.ok) throw new Error("Failed to fetch data");
@@ -79,48 +84,87 @@ const TriviaGame = () => {
     };
 
     getTriviaData();
+
+    // Cleanup
+    return () => {
+      controller.abort();
+    };
   }, []);
 
-  // FETCHING API DATA
-  // const getTriviaData = async () => {
-  //   const res = await fetch("https://opentdb.com/api.php?amount=5&category=9");
+  // console.log(triviaData);
 
-  //   if (!res.ok) throw new Error("Failed to fetch data");
+  // DESTRUCTURE PROPERTIES
+  const { question, incorrect_answers, correct_answer } =
+    triviaData[currentIndex];
 
-  //   const { results } = await res.json();
-  //   setTriviaData(results);
-  //   console.log(triviaData);
-  // };
+  // SHUFFLE ANSWERS
+  const answers = [...incorrect_answers, correct_answer];
+  // eslint-disable-next-line react-hooks/purity
+  const shuffled = answers.sort(() => Math.random() - 0.5);
 
   // START GAME
   const startGame = () => {
-    // console.log(shuffled);
+    setLoading(false);
   };
 
-  console.log(triviaData);
+  // CHECK ANSWER
+  const checkAnswer = (selectedAnswer: string) => {
+    setSelectedAnswer(selectedAnswer);
+
+    if (selectedAnswer === correct_answer) {
+      setScore((prevScore) => prevScore + 10);
+
+      // console.log("Correct!");
+    } else {
+      // console.log(":(");
+    }
+
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+      setSelectedAnswer(null);
+    }, 2500);
+  };
+
+  const buttonColor = (answer: string) => {
+    if (!selectedAnswer) return "bg-main-bg";
+
+    if (answer === selectedAnswer) {
+      return answer === correct_answer ? "bg-green-500" : "bg-red-500";
+    }
+  };
 
   return (
     <main className="h-screen min-h-full flex flex-col gap-12">
       <TitleCard title={"🕹️ Trivia Game 🧐 "} />
 
       <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded bg-main-border">
-        <button onClick={startGame} className="btn">
-          Start game
-        </button>
-      </div>
+        {loading && (
+          <button onClick={startGame} className="btn">
+            Start game
+          </button>
+        )}
 
-      {/* Temporary hard coded UI */}
-      <div className="border border-blue-500 sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded">
-        <p className="bg-red-500 text-white rounded font-bold text-center p-4">
-          Question
-        </p>
+        {!loading && (
+          <>
+            <p className="bg-fuchsia-500 rounded font-bold text-center p-4">
+              {decodeHTML(question)}
+            </p>
 
-        <ul className="grid grid-cols-2 gap-4">
-          <p>Answers</p>
-          <p>Answers</p>
-          <p>Answers</p>
-          <p>Answers</p>
-        </ul>
+            <p className="text-center font-bold">Your score: {score}</p>
+
+            <ul className="grid grid-cols-2 gap-4 text-center">
+              {shuffled.map((answer) => (
+                <li
+                  key={answer}
+                  onClick={() => checkAnswer(answer)}
+                  className={`${buttonColor(answer)} p-4 hover:font-bold hover:underline hover:cursor-pointer`}
+                >
+                  {decodeHTML(answer)}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     </main>
   );
@@ -128,42 +172,10 @@ const TriviaGame = () => {
 
 export default TriviaGame;
 
-// GAME SETUP
-// const answers = [...incorrect_answers, correct_answer];
-// const shuffled = answers.sort(() => Math.random() - 0.5);
-
-// INTERFACES
-// interface TriviaGameTypes {
-//   id: number;
-//   type: string;
-//   question: string;
-//   correctAnswer: string;
-//   incorrectAnswers: string[];
-// }
-
 // RESET GAME
 // const resetGame = () => {
 //   console.log("Game reset!");
 // };
-
-// HELPER FUNCTIONS
-// const decodeHTML = (html: string) => {
-//   const text = document.createElement("textarea");
-//   text.innerHTML = html;
-//   return text.value;
-// };
-
-// // useMemo
-// const shuffledAnswers = useMemo(() => {
-//   const allAnswers = [...incorrect_answers, correct_answer];
-
-//   // eslint-disable-next-line react-hooks/purity
-//   return allAnswers.sort(() => Math.random() - 0.5);
-// }, [correct_answer, incorrect_answers]);
-
-// OLD CODE FOR THE LOCAL JSON FILE
-// DESTRUCTURING DATA
-// const { question, correct_answer, incorrect_answers } = results[currentIndex];
 
 // THE LOGIC
 // 1. When the player clicks the "Start game" button, the Open Trivia DB API is called.
