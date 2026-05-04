@@ -11,30 +11,8 @@ import TitleCard from "../components/TitleCard";
 // - Fix/update layout, make it look actually nice
 // - Let players choose difficulty, question types and category themselves
 
-// THE LOGIC (REFINED WITH THE HELP OF GEMINI)
-
-// Tracking
-// - Track which question index the player is currently on (use useState for this!)
-
-// Score
-// - Increment only when the chosen answer is correct (use useState for this as well!)
-
-// Progression
-// - When a button is clicked, check the answer, then increment the current index
-
 // End game
 // - If currentIndex === questions.length, show the result screen
-
-// Important
-// - Use utility function to decode HTML Entities
-// - Win state, instead of hasWon, perhaps track the score.
-
-// Open Trivia DB
-// - API URL: https://opentdb.com/api.php?amount=5&category=9
-// - Returns 5 questions in the category 'General Knowledge'. Any difficulty and includes both multiple choice and true/false questions.
-// - See triviaGameQuestions.json for a temporary hardcoded API response
-
-//
 
 // HELPER FUNCTIONS
 const decodeHTML = (html: string) => {
@@ -72,7 +50,7 @@ const TriviaGame = () => {
     const getTriviaData = async () => {
       // Refactor to use a try / catch block
       const res = await fetch(
-        "https://opentdb.com/api.php?amount=5&category=9",
+        "https://opentdb.com/api.php?amount=3&category=9",
         { signal },
       );
 
@@ -91,46 +69,47 @@ const TriviaGame = () => {
     };
   }, []);
 
-  // console.log(triviaData);
-
-  // DESTRUCTURE PROPERTIES
+  // Destructure properties
   const { question, incorrect_answers, correct_answer } =
     triviaData[currentIndex];
 
-  // SHUFFLE ANSWERS
-  const answers = [...incorrect_answers, correct_answer];
-  // eslint-disable-next-line react-hooks/purity
-  const shuffled = answers.sort(() => Math.random() - 0.5);
+  // useMemo to shuffle questions
+  const shuffledAnswers = useMemo(() => {
+    const answers = [...incorrect_answers, correct_answer];
+    // eslint-disable-next-line react-hooks/purity
+    return answers.sort(() => Math.random() - 0.5);
+  }, [incorrect_answers, correct_answer]);
 
-  // START GAME
+  // Start game
   const startGame = () => {
     setLoading(false);
   };
 
-  // CHECK ANSWER
+  // Check answer
   const checkAnswer = (selectedAnswer: string) => {
     setSelectedAnswer(selectedAnswer);
 
     if (selectedAnswer === correct_answer) {
       setScore((prevScore) => prevScore + 10);
-
-      // console.log("Correct!");
     } else {
-      // console.log(":(");
     }
 
     setTimeout(() => {
       setCurrentIndex((prevIndex) => prevIndex + 1);
       setSelectedAnswer(null);
-    }, 2500);
+    }, 2000);
   };
 
+  // Dynamic answer button styling
   const buttonColor = (answer: string) => {
-    if (!selectedAnswer) return "bg-main-bg";
+    if (!selectedAnswer)
+      return "bg-main-bg hover:font-bold hover:underline hover:cursor-pointer";
 
-    if (answer === selectedAnswer) {
-      return answer === correct_answer ? "bg-green-500" : "bg-red-500";
-    }
+    if (answer === correct_answer) return "bg-green-500 text-white";
+
+    if (answer === selectedAnswer) return "bg-red-500 text-white";
+
+    return "bg-main-bg";
   };
 
   return (
@@ -138,32 +117,52 @@ const TriviaGame = () => {
       <TitleCard title={"🕹️ Trivia Game 🧐 "} />
 
       <div className="sm:w-1/2 sm:self-center flex flex-col gap-4 mx-8 p-8 rounded bg-main-border">
+        {/* Start screen */}
         {loading && (
-          <button onClick={startGame} className="btn">
-            Start game
-          </button>
+          <div className="font-pixel-square flex flex-col gap-8 items-center justify-center">
+            <p className="text-4xl sm:text-6xl text-red-500">Trivia Game</p>
+            <button
+              onClick={startGame}
+              className="text-2xl sm:text-4xl border border-main-text rounded-full px-8 py-4 cursor-pointer hover:text-red-500 hover:border-red-500"
+            >
+              Start game
+            </button>
+
+            <p className="text-lg sm:text-2xl text-center">
+              You can get a total of {triviaData.length * 10} points. Are you
+              smart enough?!
+            </p>
+          </div>
         )}
 
+        {/* Actual Trivia Game  */}
         {!loading && (
-          <>
-            <p className="bg-fuchsia-500 rounded font-bold text-center p-4">
+          <div className="font-pixel-square flex flex-col gap-8">
+            <p className="border border-main-text text-red-500 font-bold rounded text-center p-4">
               {decodeHTML(question)}
             </p>
 
             <p className="text-center font-bold">Your score: {score}</p>
 
             <ul className="grid grid-cols-2 gap-4 text-center">
-              {shuffled.map((answer) => (
+              {shuffledAnswers.map((answer) => (
                 <li
                   key={answer}
                   onClick={() => checkAnswer(answer)}
-                  className={`${buttonColor(answer)} p-4 hover:font-bold hover:underline hover:cursor-pointer`}
+                  className={`${buttonColor(answer)} rounded p-4 border border-main-text`}
                 >
                   {decodeHTML(answer)}
                 </li>
               ))}
             </ul>
-          </>
+          </div>
+        )}
+
+        {/* Results */}
+        {currentIndex >= triviaData.length && (
+          <div>
+            <p>Well done</p>
+          </div>
         )}
       </div>
     </main>
@@ -176,13 +175,3 @@ export default TriviaGame;
 // const resetGame = () => {
 //   console.log("Game reset!");
 // };
-
-// THE LOGIC
-// 1. When the player clicks the "Start game" button, the Open Trivia DB API is called.
-// 2. Questions will be loaded/rendered
-// 3. useState has to be used to check progress (1/5 questions answered, 2/5 questions answered, etc)
-// 4. useState has to be used to check amount of correct and incorrect answers
-// 6. useState has to be used to determine if the player has won
-// 7. useEffect has to be used to fetch the data when the component mounts (or if I want to have the questions timed (e.g., 30 seconds))
-// 8. How do I implement a different layout for true/false questions, as opposed to the 'normal' multiple choice questions? --> conditional rendering based on the type of question
-// 9. Do I use a .filter() to check if the player's clicked answer equals the actual answer? --> no, use this instead: if (clickedAnswer === currentQuestion.correct_answer)
