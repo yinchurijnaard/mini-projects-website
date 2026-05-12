@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import TitleCard from "../components/TitleCard";
+import TriviaGameComponent from "../components/TriviaGameComponent";
 
 // To Do / Check
 // - Implement points systems (e.g., +10 points for every correct answer and -5 points for every incorrect answer)
@@ -70,15 +71,15 @@ const TriviaGame = () => {
   }, []);
 
   // Destructure properties
-  const { question, incorrect_answers, correct_answer } =
-    triviaData[currentIndex];
+  // const { question, incorrect_answers, correct_answer } =
+  //   triviaData[currentIndex];
 
   // useMemo to shuffle questions
-  const shuffledAnswers = useMemo(() => {
-    const answers = [...incorrect_answers, correct_answer];
-    // eslint-disable-next-line react-hooks/purity
-    return answers.sort(() => Math.random() - 0.5);
-  }, [incorrect_answers, correct_answer]);
+  // const shuffledAnswers = useMemo(() => {
+  //   const answers = [...incorrect_answers, correct_answer];
+  //   // eslint-disable-next-line react-hooks/purity
+  //   return answers.sort(() => Math.random() - 0.5);
+  // }, [incorrect_answers, correct_answer]);
 
   // Start game
   const startGame = () => {
@@ -86,7 +87,7 @@ const TriviaGame = () => {
   };
 
   // Check answer
-  const checkAnswer = (selectedAnswer: string) => {
+  const checkAnswer = (selectedAnswer: string, correct_answer: string) => {
     setSelectedAnswer(selectedAnswer);
 
     if (selectedAnswer === correct_answer) {
@@ -101,16 +102,16 @@ const TriviaGame = () => {
   };
 
   // Dynamic answer button styling
-  const buttonColor = (answer: string) => {
-    if (!selectedAnswer)
-      return "bg-main-bg hover:font-bold hover:underline hover:cursor-pointer";
+  // const buttonColor = (answer: string) => {
+  //   if (!selectedAnswer)
+  //     return "bg-main-bg hover:font-bold hover:underline hover:cursor-pointer";
 
-    if (answer === correct_answer) return "bg-green-500 text-white";
+  //   if (answer === correct_answer) return "bg-green-500 text-white";
 
-    if (answer === selectedAnswer) return "bg-red-500 text-white";
+  //   if (answer === selectedAnswer) return "bg-red-500 text-white";
 
-    return "bg-main-bg";
-  };
+  //   return "bg-main-bg";
+  // };
 
   return (
     <main className="h-screen min-h-full flex flex-col gap-12">
@@ -136,7 +137,7 @@ const TriviaGame = () => {
         )}
 
         {/* Actual Trivia Game  */}
-        {!loading && (
+        {/* {!loading && (
           <div className="font-pixel-square flex flex-col gap-8">
             <p className="border border-main-text text-red-500 font-bold rounded text-center p-4">
               {decodeHTML(question)}
@@ -156,6 +157,16 @@ const TriviaGame = () => {
               ))}
             </ul>
           </div>
+        )} */}
+
+        {!loading && triviaData.length > 0 && (
+          <TriviaGameComponent
+            data={triviaData}
+            currentIndex={currentIndex}
+            onAnswer={checkAnswer}
+            score={score}
+            selectedAnswer={selectedAnswer}
+          />
         )}
 
         {/* Results */}
